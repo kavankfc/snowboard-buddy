@@ -74,9 +74,18 @@ const ChatInterface = () => {
 
       const data = await response.text();
       
+      // Parse iframe response to extract srcdoc content
+      let botContent = 'I received your message!';
+      if (data.includes('<iframe') && data.includes('srcdoc=')) {
+        const srcdocMatch = data.match(/srcdoc="([^"]+)"/);
+        if (srcdocMatch && srcdocMatch[1]) {
+          botContent = srcdocMatch[1];
+        }
+      }
+      
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: data || 'I received your message!',
+        content: botContent,
         isUser: false,
         timestamp: new Date(),
       };
