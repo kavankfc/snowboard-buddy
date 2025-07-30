@@ -56,11 +56,11 @@ const ChatInterface = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://n8n.kloudflake.com/webhook-test/43cb43fe-ad50-436f-8f1e-2abcbc512600', {
+      const response = await fetch('https://n8n.kloudflake.com/webhook/d105c3ad-3488-438c-b405-b856c90ce80e/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Basic ' + btoa('snowboard-doctor:snowboard-doctor'),
+          'Authorization': 'Basic ' + btoa('snowboardoctor:snowboardoctor'),
         },
         body: JSON.stringify({
           chatInput: userMessage.content,
@@ -72,16 +72,10 @@ const ChatInterface = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.text();
+      const data = await response.json();
       
-      // Parse iframe response to extract srcdoc content
-      let botContent = 'I received your message!';
-      if (data.includes('<iframe') && data.includes('srcdoc=')) {
-        const srcdocMatch = data.match(/srcdoc="([^"]+)"/);
-        if (srcdocMatch && srcdocMatch[1]) {
-          botContent = srcdocMatch[1];
-        }
-      }
+      // Extract output from JSON response
+      const botContent = data.output || 'I received your message!';
       
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
