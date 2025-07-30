@@ -21,19 +21,36 @@ const ChatInterface = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  // Generate session ID based on browser fingerprint
+  // Generate session ID based on browser fingerprint including IP
   useEffect(() => {
-    const generateSessionId = () => {
-      const navigator_info = navigator.userAgent;
-      const screen_info = `${screen.width}x${screen.height}`;
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const language = navigator.language;
-      
-      const fingerprint = `${navigator_info}-${screen_info}-${timezone}-${language}-${Date.now()}`;
-      return btoa(fingerprint).substring(0, 32);
+    const generateSessionId = async () => {
+      try {
+        // Fetch IP address
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipResponse.json();
+        const ipAddress = ipData.ip;
+        
+        const navigator_info = navigator.userAgent;
+        const screen_info = `${screen.width}x${screen.height}`;
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const language = navigator.language;
+        
+        const fingerprint = `${navigator_info}-${screen_info}-${timezone}-${language}-${ipAddress}-${Date.now()}`;
+        return btoa(fingerprint).substring(0, 32);
+      } catch (error) {
+        console.warn('Could not fetch IP address, using fallback:', error);
+        // Fallback without IP
+        const navigator_info = navigator.userAgent;
+        const screen_info = `${screen.width}x${screen.height}`;
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const language = navigator.language;
+        
+        const fingerprint = `${navigator_info}-${screen_info}-${timezone}-${language}-${Date.now()}`;
+        return btoa(fingerprint).substring(0, 32);
+      }
     };
 
-    setSessionId(generateSessionId());
+    generateSessionId().then(setSessionId);
   }, []);
 
   // Auto-scroll to bottom when new messages arrive
