@@ -33,9 +33,8 @@ const ChatInterface = () => {
         const navigator_info = navigator.userAgent;
         const screen_info = `${screen.width}x${screen.height}`;
         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const language = navigator.language;
         
-        const fingerprint = `${navigator_info}-${screen_info}-${timezone}-${language}-${ipAddress}-${Date.now()}`;
+        const fingerprint = `${navigator_info}-${screen_info}-${timezone}-${ipAddress}-${Date.now()}`;
         return btoa(fingerprint).substring(0, 32);
       } catch (error) {
         console.warn('Could not fetch IP address, using fallback:', error);
@@ -43,9 +42,8 @@ const ChatInterface = () => {
         const navigator_info = navigator.userAgent;
         const screen_info = `${screen.width}x${screen.height}`;
         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const language = navigator.language;
         
-        const fingerprint = `${navigator_info}-${screen_info}-${timezone}-${language}-${Date.now()}`;
+        const fingerprint = `${navigator_info}-${screen_info}-${timezone}-${Date.now()}`;
         return btoa(fingerprint).substring(0, 32);
       }
     };
