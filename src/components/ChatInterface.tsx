@@ -242,6 +242,19 @@ const ChatInterface = () => {
             <p className="text-xs text-muted-foreground mt-2 text-center">
               Session ID: {sessionId.substring(0, 8)}...
             </p>
+            <div className="mt-3 pt-3 border-t border-border/30 text-center">
+              <a 
+                href="https://buymeacoffee.com/kavankfc4" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors"
+              >
+                ☕ Buy me a coffee
+              </a>
+              <p className="text-xs text-muted-foreground/70 mt-1">
+                Thanks for your support! It motivates continuous improvements.
+              </p>
+            </div>
           </div>
         </Card>
       </div>
