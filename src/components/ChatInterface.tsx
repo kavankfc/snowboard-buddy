@@ -5,7 +5,6 @@ import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Send, Bot, User } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { User as SupabaseUser, Session } from '@supabase/supabase-js';
 
 interface Message {
   id: string;
@@ -14,18 +13,43 @@ interface Message {
   timestamp: Date;
 }
 
-interface ChatInterfaceProps {
-  user: SupabaseUser;
-  session: Session;
-  sessionId: string;
-}
-
-const ChatInterface = ({ user, sessionId }: ChatInterfaceProps) => {
+const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [sessionId, setSessionId] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  // Generate session ID based on browser fingerprint including IP
+  useEffect(() => {
+    const generateSessionId = async () => {
+      try {
+        // Fetch IP address
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipResponse.json();
+        const ipAddress = ipData.ip;
+        
+        const navigator_info = navigator.userAgent;
+        const screen_info = `${screen.width}x${screen.height}`;
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        
+        const fingerprint = `${navigator_info}-${screen_info}-${timezone}-${ipAddress}-${Date.now()}`;
+        return btoa(fingerprint).substring(0, 32);
+      } catch (error) {
+        console.warn('Could not fetch IP address, using fallback:', error);
+        // Fallback without IP
+        const navigator_info = navigator.userAgent;
+        const screen_info = `${screen.width}x${screen.height}`;
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        
+        const fingerprint = `${navigator_info}-${screen_info}-${timezone}-${Date.now()}`;
+        return btoa(fingerprint).substring(0, 32);
+      }
+    };
+
+    generateSessionId().then(setSessionId);
+  }, []);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -216,7 +240,7 @@ const ChatInterface = ({ user, sessionId }: ChatInterfaceProps) => {
               </Button>
             </div>
             <p className="text-xs text-muted-foreground mt-2 text-center">
-              Signed in as: {user.email}
+              Session ID: {sessionId.substring(0, 8)}...
             </p>
             <div className="mt-3 pt-3 border-t border-border/30 text-center">
               <a 
