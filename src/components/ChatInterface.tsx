@@ -119,9 +119,9 @@ const ChatInterface = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-handwriting font-bold text-primary mb-2">
-            Snowboard Doctor
+            Snowboard Buddy
           </h1>
-          <p className="text-muted-foreground font-medium">Your personal AI snowboard assistant</p>
+          <p className="text-muted-foreground font-medium">Your personal AI snowboard buddy</p>
         </div>
 
         {/* Chat Container */}
