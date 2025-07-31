@@ -190,6 +190,15 @@ const ChatInterface = () => {
               <p className="text-xs text-muted-foreground/70 mt-1">
                 Thanks for your support! It motivates continuous improvements.
               </p>
+              
+              <div className="mt-4 pt-3 border-t border-border/30">
+                <p className="text-xs text-muted-foreground/60 leading-relaxed max-w-2xl mx-auto">
+                  The responses provided by this chatbot are generated using a large language model (LLM) and may include information retrieved from various reference materials. While we strive for accuracy and usefulness, the content is not a substitute for professional instruction or certified training.
+                </p>
+                <p className="text-xs text-muted-foreground/60 mt-2">
+                  Please consult your snowboard instructor or a qualified expert before acting on any advice or techniques suggested here.
+                </p>
+              </div>
             </div>
           </div>
         </Card>
