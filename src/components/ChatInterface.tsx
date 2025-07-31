@@ -131,9 +131,7 @@ const ChatInterface = () => {
             <div className="space-y-4">
               {messages.length === 0 ? <div className="text-center py-12">
                   <Bot className="w-12 h-12 text-primary mx-auto mb-4" />
-                  <p className="text-lg font-handwriting text-muted-foreground">
-                    Start a conversation! Ask me anything...
-                  </p>
+                  <p className="text-lg font-handwriting text-muted-foreground">Start a conversation! Ask me anything about snowboarding...</p>
                 </div> : messages.map(message => <div key={message.id} className={`flex items-start gap-3 ${message.isUser ? 'flex-row-reverse' : 'flex-row'}`}>
                     {/* Avatar */}
                     <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${message.isUser ? 'bg-chat-user text-chat-user-foreground' : 'bg-chat-bot text-chat-bot-foreground border border-border'}`}>
