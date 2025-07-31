@@ -17,9 +17,10 @@ interface Message {
 interface ChatInterfaceProps {
   user: SupabaseUser;
   session: Session;
+  sessionId: string;
 }
 
-const ChatInterface = ({ user }: ChatInterfaceProps) => {
+const ChatInterface = ({ user, sessionId }: ChatInterfaceProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +55,7 @@ const ChatInterface = ({ user }: ChatInterfaceProps) => {
         },
         body: JSON.stringify({
           chatInput: userMessage.content,
-          sessionId: user.email,
+          sessionId: sessionId,
         }),
       });
 

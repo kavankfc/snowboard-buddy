@@ -4,7 +4,7 @@ import AuthWrapper from '@/components/AuthWrapper';
 const Index = () => {
   return (
     <AuthWrapper>
-      {(user, session) => <ChatInterface user={user} session={session} />}
+      {(user, session, sessionId) => <ChatInterface user={user} session={session} sessionId={sessionId} />}
     </AuthWrapper>
   );
 };
