@@ -126,6 +126,19 @@ const ChatInterface = () => {
 
         {/* Chat Container */}
         <Card className="shadow-soft border-2 border-border/50 overflow-hidden">
+          {/* Introduction Section */}
+          <div className="bg-muted/30 border-b border-border/50 p-4 md:p-6">
+            <div className="flex items-start gap-3">
+              <Bot className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+              <div className="text-sm text-muted-foreground leading-relaxed">
+                <p className="font-medium text-foreground mb-1">About this chatbot:</p>
+                <p>
+                  This chatbot is specifically trained using CASI (Canadian Association of Snowboard Instructors) reference materials and focuses exclusively on snowboarding instruction and technique improvement. For topics outside of snowboarding instruction, the chatbot will respond with "I could not find an answer in the provided documents."
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Chat History */}
           <ScrollArea className="h-[500px] md:h-[600px] p-4 md:p-6">
             <div className="space-y-4">
