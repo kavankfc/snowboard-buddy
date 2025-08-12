@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Send, Bot, User } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 interface Message {
   id: string;
   content: string;
@@ -17,9 +18,9 @@ const ChatInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const {
-    toast
-  } = useToast();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+  const [isEmbed, setIsEmbed] = useState(false);
 
   // Generate session ID based on browser fingerprint including IP
   useEffect(() => {
@@ -46,6 +47,37 @@ const ChatInterface = () => {
     };
     generateSessionId().then(setSessionId);
   }, []);
+
+  // Detect embed mode from URL param
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const embedParam = params.get('embed');
+      setIsEmbed(embedParam === '1' || embedParam === 'true');
+    } catch {}
+  }, []);
+
+  // Post height to parent when in embed mode
+  useEffect(() => {
+    if (!isEmbed) return;
+    const el = rootRef.current;
+    if (!el) return;
+
+    const postHeight = () => {
+      const height = el.scrollHeight;
+      window.parent?.postMessage({ type: 'SNOWBOARD_BUDDY_IFRAME_HEIGHT', height }, '*');
+    };
+
+    postHeight();
+    const ro = new ResizeObserver(() => postHeight());
+    ro.observe(el);
+
+    const interval = setInterval(postHeight, 1000);
+    return () => {
+      ro.disconnect();
+      clearInterval(interval);
+    };
+  }, [isEmbed]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -114,18 +146,22 @@ const ChatInterface = () => {
       sendMessage();
     }
   };
-  return <div className="min-h-screen bg-paper-texture p-4 md:p-6">
+  return <div ref={rootRef} className={cn(isEmbed ? "min-h-0 bg-transparent p-0" : "min-h-screen bg-paper-texture p-4 md:p-6")}>
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-handwriting font-bold text-primary mb-2">
-            Snowboard Buddy
-          </h1>
-          <p className="text-muted-foreground font-medium">Your personal AI snowboard buddy</p>
-        </div>
+        {!isEmbed && (
+          <>
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-4xl md:text-5xl font-handwriting font-bold text-primary mb-2">
+                Snowboard Buddy
+              </h1>
+              <p className="text-muted-foreground font-medium">Your personal AI snowboard buddy</p>
+            </div>
+          </>
+        )}
 
         {/* Chat Container */}
-        <Card className="shadow-soft border-2 border-border/50 overflow-hidden">
+        <Card className={cn("overflow-hidden", isEmbed ? "shadow-none border-0 bg-transparent" : "shadow-soft border-2 border-border/50")}>
           {/* Introduction Section */}
           <div className="bg-muted/30 border-b border-border/50 p-4 md:p-6">
             <div className="flex items-start gap-3">
@@ -140,7 +176,7 @@ const ChatInterface = () => {
           </div>
 
           {/* Chat History */}
-          <ScrollArea className="h-[500px] md:h-[600px] p-4 md:p-6">
+          <ScrollArea className={cn(isEmbed ? "max-h-none h-auto" : "h-[500px] md:h-[600px]", "p-4 md:p-6")}>
             <div className="space-y-4">
               {messages.length === 0 ? <div className="text-center py-12">
                   <Bot className="w-12 h-12 text-primary mx-auto mb-4" />
